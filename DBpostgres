@@ -1,1 +1,21 @@
-#veamos la estructura que necesita cada tabla y su contracción usual en postgresql
+#veamos la estructura que necesita cada tabla y su construcción usual en postgresql
+
+
+CREATE TABLE public.users
+(
+    userlogin character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    password character varying(40) COLLATE pg_catalog."default" NOT NULL,
+    primernombre character varying(250) COLLATE pg_catalog."default" NOT NULL,
+    segundonombre character varying(250) COLLATE pg_catalog."default" NOT NULL,
+    primerapellido character varying(250) COLLATE pg_catalog."default" NOT NULL,
+    segundoapellido character varying(250) COLLATE pg_catalog."default" NOT NULL,
+    tipoid character varying(40) COLLATE pg_catalog."default" NOT NULL,
+    id integer NOT NULL,
+    edad integer,
+    CONSTRAINT users_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.users
+    OWNER to postgres;
