@@ -1,6 +1,6 @@
-#veamos la estructura que necesita cada tabla y su construcción usual en postgresql
+#--veamos la estructura que necesita cada tabla y su construcción usual en postgresql
 
-
+#--Note la construcción de una tabla de usuarios en la que se almacenarán los registros del aplicativo
 CREATE TABLE public.users
 (
     userlogin character varying(255) COLLATE pg_catalog."default" NOT NULL,
@@ -19,3 +19,36 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.users
     OWNER to postgres;
+
+#--Note la construcción de una tabla de familiares en la que se almacenarán los registros de familiares de un usuario logeado
+CREATE TABLE public.familiar
+(
+    "Parentesco" text COLLATE pg_catalog."default" NOT NULL,
+    "primerNombre" text COLLATE pg_catalog."default" NOT NULL,
+    "segundoNombre" text COLLATE pg_catalog."default",
+    "primerApellido" text COLLATE pg_catalog."default" NOT NULL,
+    "segundoApellido" text COLLATE pg_catalog."default",
+    "tipoId" text[] COLLATE pg_catalog."default" NOT NULL,
+    "Id" integer NOT NULL,
+    edad integer NOT NULL,
+    "id_User" integer NOT NULL,
+    CONSTRAINT familiar_pkey PRIMARY KEY ("Id"),
+    CONSTRAINT "id_User" FOREIGN KEY ("id_User")
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.familiar
+    OWNER to postgres;
+-- Index: fki_id_User
+
+-- DROP INDEX public."fki_id_User";
+
+CREATE INDEX "fki_id_User"
+    ON public.familiar USING btree
+    ("id_User" ASC NULLS LAST)
+    TABLESPACE pg_default;
