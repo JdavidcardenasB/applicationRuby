@@ -1,0 +1,84 @@
+#El usuario a esta altura del codigo ya esta logeado en el software ¡Congrats! :D
+
+#Crearemos el menú para usuarios logeados
+
+class Options
+  puts "Por favor digite la opción deseada."
+    option = gets().strip()
+    if option == 1
+    then
+    puts "informacionPersonal" #Muestra la información personal
+    else
+    if option == 2
+    then
+    puts "editarInformacion" # edita la información personal.
+    else
+    if option == 3
+    then
+    puts "agregarFamiliar" #Agrega un familiar.
+    else
+    if option == 4
+    then
+    puts "listarFamiliar" #Muestra los familiares.
+    else
+    if option == 5
+    then
+    puts "Salir" Da salida.
+   end
+end
+
+class informacionPersonal
+  <%= form.select :Registro_id, aplicativo.pluck(:id), :usuarioLogin, :contraseñaLogin, :primerNombre, :segundoNombre, :primerApellido, :segundoApellido, :tipoId, :Id, :edad %>
+end
+
+class editarInformacion
+  def change 
+   ActiveRecord::Base.connection.columns("Registro").map{|c|}
+  end
+end
+
+
+class agregarFamiliar
+def change
+create_table :Familiar do |t|
+            t.string :Parentesco            
+            t.string :primerNombre            
+            t.string :segundoNombre
+            t.string :primerApellido
+            t.string :segundoApellido
+            t.vchar :tipoId
+            t.integer :Id
+            t.integer :edad
+            
+            # t.timestamps agrega 2 atributos created_at y updated_at que se agregar automáticamente al crear o actualizar un registro
+            t.timestamps
+        end
+  end
+  end
+  def change2
+   Aplicativo.connection.insert("INSERT INTO Familiar(fields) VALUES('parentesco';'primerNombre';'segundoNombre';'primerApellido'; 'segundoApellido'; 'tipoId'; 'Id'; 'edad')")
+  end
+ end
+ 
+ class listarFamiliar
+  def change 
+   ActiveRecord::Base.connection.table(Familiar)
+  end
+ end
+ 
+ 
+ class Salir
+ def destroy
+  session.delete :user
+
+  redirect_to root_path
+ end
+  def change 
+   get "/logout", to: "sessions#destroy"
+  end
+ end
+ 
+ #Así tenemos nuestro menú listo para la implementación :D!
+ 
+ 
+ 
