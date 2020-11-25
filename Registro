@@ -1,0 +1,63 @@
+#Aquí mostraremos el registro de un usuario
+
+config/routes.rb
+# Utilizando el metodo de separación de rutas
+
+resources :users, only: [:new, :create, :show]
+namespace :user do
+  resources :users
+end
+
+app/controllers/users_controllers.rb
+class UsersController < ApplicationController
+  def new
+  end
+  def create
+  end
+  def show
+  end
+end
+
+ app/controllers/user_controllers.rb
+class UserController < ApplicationController
+  before_action :authenticate_user!
+
+  private
+  def authenticate_admin!
+    unless current_user.signed_in? 
+      flash[:danger] = "No tienes autorización para entrar en esa sección, por favor realizar login"
+      redirect_to root_path
+    end
+  end
+end
+
+app/controllers/user/users_controllers.rb
+### Este controlador hereda de UserController!
+class Admin::UsersLogedController < UserController
+      # Aquí la implementación del registro
+      # Primero configuremos el nombre de la base de datos en nuestro hash de configuración
+        db_config[:database] = 'Aplicativo' 
+        ActiveRecord::Base.connection.create_database(db_config[:database])
+        #Hagamos el registro así...
+      class CreateRegistro < ActiveRecord::Migration[5.0]
+        def change
+        
+          # create_table :Registro crea una tabla llama registro en la base de datos aplicativo
+          create_table :Registro do |t|
+            t.string :usuarioLogin            
+            t.vchar :contraseñaLogin
+            t.string :primerNombre            
+            t.string :segundoNombre
+            t.string :primerApellido
+            t.string :segundoApellido
+            t.vchar :tipoId
+            t.integer :Id
+            t.integer :edad
+            
+            # t.timestamps agrega 2 atributos created_at y updated_at que se agregar automáticamente al crear o actualizar un registro
+            t.timestamps
+          end
+        end
+      end
+
+end
