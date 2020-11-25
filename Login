@@ -1,0 +1,57 @@
+# Crearemos el login en esta sección
+
+#note detalladamente cada paso
+
+#la página de inicio de la aplicación presenta las opciones de login para acceder
+
+<%= link_to "Login", login_path %>
+
+#utilizando config/routes.rb:
+
+get "/login", to: redirect("/auth/google_oauth2")
+
+#Es necesario hacer clic en Iniciar sesión, de aquí se redirige a la pantalla de autorización del usuario, aquí es necesario implementar una gema
+
+gem "omniauth"
+
+Rails.application.config.middleware.use OmniAuth::Builder do
+  config = Rails.application.config.x.settings["oauth2"]
+
+  provider :oauth2, 
+            config["client_id"],
+            config["client_secret"]
+end
+
+#a continuación mostremos los datos de inicio de la sesión
+
+get "/auth/oauth2/callback", to: "sessions#create"
+
+resource :session, only: [:create, :destroy]
+#Aquí proporcionamos ...
+#información de perfil, que incluye el identificador y el nombre visible.
+
+class SessionsController < ApplicationController
+
+  def create
+    user_info = request.env["omniauth.auth"]
+
+    user           = User.new
+    user.id        = user_info["uid"]
+    user.name      = user_info["info"]["name"]
+  
+    session[:user] = Marshal.dump user
+
+    redirect_to root_path
+  end
+  
+  #así la vista del software propocionará ahora la información sobre el usuario que ha iniciado sesión:
+  
+  <% if logged_in? %>
+  <% if current_user.image_url %>
+    <%= image_tag current_user.image_url, class: "img-circle", width: 24 %>
+  <% end %>
+  <span>
+    <%= current_user.name %> &nbsp;
+    <%= link_to "(logout)", logout_path %>
+  </span>
+  
